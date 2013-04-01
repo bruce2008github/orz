@@ -1,0 +1,460 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>orz</title>
+    
+    <link rel="stylesheet" href="_static/orz.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script> 
+  </head>
+  <body><a href="http://github.com/xiazheteng/orz"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub" /></a>
+    <div class="document">
+      <div class="documentwrapper">
+          <div class="body">
+            
+  <div class="section" id="orz">
+<h1>orz<a class="headerlink" href="#orz" title="Permalink to this headline">¶</a></h1>
+<p>Porting programming languages to CPython VM.</p>
+<p>There is only an experimental partial implementation of <a class="reference internal" href="#lua-5-2">Lua 5.2</a>
+right now.  You can try it out with following commands.</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> pip install git+git://github.com/xiazheteng/orz
+<span class="gp">$</span> cat &gt; hello.lua &lt;&lt; EOF
+<span class="go">print(_VERSION)</span>
+<span class="go">EOF</span>
+<span class="gp">$</span> python -m orz.lua hello.lua
+<span class="go">Lua 5.2</span>
+<span class="gp">$</span>
+</pre></div>
+</div>
+<div class="section" id="lua-5-2">
+<h2>Lua 5.2<a class="headerlink" href="#lua-5-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="language-features">
+<h3>Language Features<a class="headerlink" href="#language-features" title="Permalink to this headline">¶</a></h3>
+<p>Most Lua language features are missing.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>GC Metamethod</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>Weak Table</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>Coroutine</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>goto statement</td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td>proper tail recursion</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="libraries">
+<h3>Libraries<a class="headerlink" href="#libraries" title="Permalink to this headline">¶</a></h3>
+<p>Only a small subset of Lua Standard Libraries are implemented.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#basic-library">Basic Library</a></td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>Coroutine</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#package-library">Package Library</a></td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#string-library">String Library</a></td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td>Table</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>Math</td>
+<td>Bug, see <a class="reference internal" href="#number">Number</a></td>
+</tr>
+<tr class="row-odd"><td>Bit32</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#i-o-library">I/O Library</a></td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#os-library">OS Library</a></td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>Debug</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="basic-library">
+<h4>Basic Library<a class="headerlink" href="#basic-library" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>assert</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>collectgarbage</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>dofile</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>error</td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td>_G</td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>getmetatable</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>ipairs</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>load</td>
+<td>Different<a class="footnote-reference" href="#load" id="id1">[1]</a></td>
+</tr>
+<tr class="row-odd"><td>loadfile</td>
+<td>Different<a class="footnote-reference" href="#load" id="id2">[1]</a></td>
+</tr>
+<tr class="row-even"><td>next</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>pairs</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>pcall</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>print</td>
+<td>Bug</td>
+</tr>
+<tr class="row-even"><td>rawequal</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>rawget</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>rawlen</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>rawset</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>select</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>setmetatable</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>tonumber</td>
+<td>Bug, see <a class="reference internal" href="#tonumber">tonumber</a></td>
+</tr>
+<tr class="row-odd"><td>tostring</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>type</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>_VERSION</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>xpcall</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="package-library">
+<h4>Package Library<a class="headerlink" href="#package-library" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>require</td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>package.config</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>package.cpath</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>package.loaded</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>package.loadlib</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>package.path</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>package.preload</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>package.searchers</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>package.searchpath</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="string-library">
+<h4>String Library<a class="headerlink" href="#string-library" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>string.byte</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>string.char</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>string.dump</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>string.find</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>string.format</td>
+<td>Bug, see <a class="reference internal" href="#format">Format</a></td>
+</tr>
+<tr class="row-even"><td>string.gmatch</td>
+<td>Different<a class="footnote-reference" href="#patterns" id="id3">[2]</a></td>
+</tr>
+<tr class="row-odd"><td>string.gsub</td>
+<td>Different<a class="footnote-reference" href="#patterns" id="id4">[2]</a></td>
+</tr>
+<tr class="row-even"><td>string.len</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>string.lower</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>string.match</td>
+<td>Different<a class="footnote-reference" href="#patterns" id="id5">[2]</a></td>
+</tr>
+<tr class="row-odd"><td>string.rep</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>string.reverse</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>string.sub</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>string.upper</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="i-o-library">
+<h4>I/O Library<a class="headerlink" href="#i-o-library" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>io.close</td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>io.flush</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>io.input</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>io.lines</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>io.open</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>io.output</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>io.popen</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>io.read</td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td>io.tmpfile</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>io.type</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>io.write</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>file:close</td>
+<td>Partial</td>
+</tr>
+<tr class="row-odd"><td>file:flush</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>file:lines</td>
+<td>No</td>
+</tr>
+<tr class="row-odd"><td>file:read</td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>file:seek</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>file:setvbuf</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>file:write</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="os-library">
+<h4>OS Library<a class="headerlink" href="#os-library" title="Permalink to this headline">¶</a></h4>
+<table border="1" class="docutils">
+<colgroup>
+<col width="45%" />
+<col width="55%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>os.clock</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>os.date</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>os.difftime</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>os.execute</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>os.exit</td>
+<td>Partial</td>
+</tr>
+<tr class="row-even"><td>os.getenv</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>os.remove</td>
+<td>Yes</td>
+</tr>
+<tr class="row-even"><td>os.rename</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>os.setlocale</td>
+<td>No</td>
+</tr>
+<tr class="row-even"><td>os.time</td>
+<td>Yes</td>
+</tr>
+<tr class="row-odd"><td>os.tmpname</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="known-bugs">
+<h3>Known Bugs<a class="headerlink" href="#known-bugs" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="number">
+<h4>Number<a class="headerlink" href="#number" title="Permalink to this headline">¶</a></h4>
+<p>All <tt class="docutils literal"><span class="pre">ValueError</span></tt> are converted to <tt class="docutils literal"><span class="pre">nan</span></tt>, and all <tt class="docutils literal"><span class="pre">OverflowError</span></tt>
+are converted to <tt class="docutils literal"><span class="pre">inf</span></tt>.</p>
+</div>
+<div class="section" id="tonumber">
+<h4>tonumber<a class="headerlink" href="#tonumber" title="Permalink to this headline">¶</a></h4>
+<p>The convertion of fraction part of hexadecimal constants may overflow.</p>
+</div>
+<div class="section" id="format">
+<h4>Format<a class="headerlink" href="#format" title="Permalink to this headline">¶</a></h4>
+<p><cite>string.format</cite> is simply equivalent to <tt class="docutils literal"><span class="pre">formatstring%...</span></tt> in
+Python, now.</p>
+</div>
+<div class="section" id="env">
+<h4>_ENV<a class="headerlink" href="#env" title="Permalink to this headline">¶</a></h4>
+<p>The following program, Lua 5.2.1 displays <cite>1</cite>, but orz.lua displays
+<cite>nil</cite>.</p>
+<div class="highlight-lua"><div class="highlight"><pre><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">function</span> <span class="nf">x</span><span class="p">()</span>
+    <span class="n">_ENV</span> <span class="o">=</span> <span class="p">{</span><span class="nb">print</span><span class="o">=</span><span class="nb">print</span><span class="p">}</span>
+    <span class="k">return</span> <span class="mi">1</span>
+<span class="k">end</span>
+
+<span class="n">_ENV</span><span class="p">[</span><span class="s2">&quot;</span><span class="s">a&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Footnotes</p>
+<table class="docutils footnote" frame="void" id="load" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>)</em> load does not accept Lua chunks in binary mode but marshaled
+Python code objects instead. And the second argument of load is
+changed to filename</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="patterns" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>, <a class="fn-backref" href="#id5">3</a>)</em> Currently, patterns are just Python regular expressions.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+      </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
