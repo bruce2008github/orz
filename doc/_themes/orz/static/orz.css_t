@@ -1,0 +1,33 @@
+@import url("nature.css");
+
+body {
+    background-color: #fff;
+}
+
+div.document {
+    max-width: 50em;
+    width: 70%;
+    margin: 0 auto;
+}
+
+div.body {
+    font-size: 1.1em;
+}
+
+div.body h1 {
+    text-align: center;
+    color: #005B81;
+    background-color: #fff;
+    font-size: 300%;
+    margin-bottom: 40px;
+}
+
+table.docutils {
+    width: 100%;
+}
+
+pre {
+    font-size: 0.9em;
+    border: none;
+    margin: 1.5em;
+}
